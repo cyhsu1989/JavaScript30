@@ -53,6 +53,10 @@
         background: black;
         position: absolute;
         top: 50%;
+        transform-origin: 100%;
+        transform: rotate(90deg);
+        transition: all 0.05s;
+        transition-timing-function: cubic-bezier(0.1, 1.67, 0.25, 1);
     }
 </style>
 
@@ -66,7 +70,35 @@
     </div>
 
     <script>
-        
+        const secondHand = document.querySelector('.second-hand');
+        const minHand = document.querySelector('.min-hand');
+        const hourHand = document.querySelector('.hour-hand');
+        const allHands = document.querySelectorAll('.hand')
+
+        function setDate() {
+            const now = new Date();
+            const seconds = now.getSeconds();
+            const secondsDegrees = ((seconds / 60) * 360) + 90;
+            secondHand.style.transform = `rotate(${secondsDegrees}deg)`;
+
+            const mins = now.getMinutes();
+            const minsDegrees = ((mins / 60) * 360) + 90;
+            minHand.style.transform = `rotate(${minsDegrees}deg)`;
+
+            const hour = now.getHours();
+            const hoursDegrees = ((hour / 12) * 360) + 90;
+            hourHand.style.transform = `rotate(${hoursDegrees}deg)`;
+
+            // 處理指針至 60 秒，會有怪異的情況
+            const allHands = document.querySelectorAll('.hand')
+            if (secondsDegrees === 90) {
+                allHands.forEach(hand => hand.style.transition = 'none')
+            } else {
+                allHands.forEach(hand => hand.style.transition = '')
+            }
+        }
+
+        setInterval(setDate, 1000);
     </script>
 </body>
 
